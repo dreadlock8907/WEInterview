@@ -1,0 +1,23 @@
+{
+    "name": "WE.App",
+    "rootNamespace": "",
+    "references": [
+        "WE.Core",
+		"WE.Debug",
+        "Leopotam.EcsLite",
+        "Leopotam.EcsLite.Di",
+        "Leopotam.EcsLite.ExtendedSystems",
+        "Leopotam.EcsLite.UnityEditor",
+        "Leopotam.EcsLite.UnityEditor.Runtime",
+        "Leopotam.EcsLite.Threads"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

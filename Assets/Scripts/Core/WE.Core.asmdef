@@ -1,0 +1,24 @@
+{
+    "name": "WE.Core",
+    "rootNamespace": "",
+    "references": [
+        "Leopotam.EcsLite",
+        "Leopotam.EcsLite.Di",
+        "Leopotam.EcsLite.ExtendedSystems",
+        "Leopotam.EcsLite.UnityEditor",
+        "Leopotam.EcsLite.UnityEditor.Runtime",
+        "Leopotam.EcsLite.Threads",
+        "Unity.Mathematics",
+        "Unity.Collections"
+
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,27 @@
+{
+    "name": "WE.Debug",
+    "rootNamespace": "",
+    "references": [
+        "WE.Core",
+        "Leopotam.EcsLite",
+        "Leopotam.EcsLite.Di",
+        "Leopotam.EcsLite.ExtendedSystems",
+        "Leopotam.EcsLite.UnityEditor",
+        "Leopotam.EcsLite.UnityEditor.Runtime",
+        "Leopotam.EcsLite.Threads",
+        "Unity.Mathematics",
+        "Unity.Collections"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [
+        "Android",
+        "iOS"
+    ],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
