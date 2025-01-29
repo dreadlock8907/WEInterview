@@ -1,6 +1,7 @@
 using WE.Core.Base.Component;
 using WE.Core.Mine.Component;
 using WE.Core.Train.Component;
+using WE.Core.Navigation;
 
 namespace WE.Core.Train.State
 {
@@ -18,7 +19,7 @@ namespace WE.Core.Train.State
     void Process(int entity, ref TrainStateComponent state);
   }
 
-    public class IdleState : ITrainState
+  public class IdleState : ITrainState
   {
     private readonly TrainStateContext context;
 
@@ -26,20 +27,21 @@ namespace WE.Core.Train.State
 
     public void Process(int entity, ref TrainStateComponent state)
     {
-      var targetNode = FindTargetNode(entity);
-      if (targetNode < 0) return;
+      var bestTarget = FindBestTargetNode(entity);
+      if(bestTarget.IsEmpty)
+        return;
 
-      var currentNode = context.TrainUtils.GetCurrentNode(entity);
-      var route = context.NavigationUtils.FindPath(currentNode, targetNode);
-      
-      context.TrainUtils.Move(entity, route);
+      context.TrainUtils.Move(entity, bestTarget.path);
+      bestTarget.Dispose();
       state.state = TrainState.Moving;
     }
 
-    private int FindTargetNode(int entity) =>
-      context.CargoUtils.IsFull(entity)
-        ? context.NavigationUtils.FindClosestNode<BaseComponent>(entity)
-        : context.NavigationUtils.FindClosestNode<MineComponent>(entity);
+    private NodeSearchResult FindBestTargetNode(int entity)
+    {
+      return context.CargoUtils.IsFull(entity)
+        ? context.NavigationUtils.FindBestNode<BaseComponent>(entity)
+        : context.NavigationUtils.FindBestNode<MineComponent>(entity);
+    }
   }
 
   public class MovingState : ITrainState

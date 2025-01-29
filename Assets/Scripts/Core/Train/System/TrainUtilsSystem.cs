@@ -54,7 +54,7 @@ namespace WE.Core.Train.System
         Stop(trainEntity);
 
       ref var movement = ref movementPool.Value.GetOrCreate(trainEntity);
-      movement.route = new NativeArray<int>(route, Allocator.Persistent);
+      movement.route.CopyFrom(route);
       movement.routeIndex = 0;
       movement.currentNode = route[0];
       movement.nextNode = route[1];

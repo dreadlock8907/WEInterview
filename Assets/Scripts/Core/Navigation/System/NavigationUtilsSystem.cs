@@ -1,10 +1,19 @@
+using System.Collections.Generic;
+
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
+
 using Unity.Collections;
 using Unity.Mathematics;
+
 using WE.Core.Railroad.System;
 using WE.Core.Transform.System;
 using WE.Core.Util;
+using WE.Core.Base.System;
+using WE.Core.Mine.System;
+using WE.Core.Train.System;
+using WE.Core.Mine.Component;
+using WE.Core.Base.Component;
 
 namespace WE.Core.Navigation.System
 {
@@ -13,6 +22,67 @@ namespace WE.Core.Navigation.System
     private readonly EcsCustomInject<RailroadUtilsSystem> railroadUtils = default;
     private readonly EcsCustomInject<TransformUtilsSystem> transformUtils = default;
     private readonly EcsCustomInject<EntityRepositorySystem> entityRepository = default;
+    private readonly EcsCustomInject<BaseUtilsSystem> baseUtils = default;
+    private readonly EcsCustomInject<MineUtilsSystem> mineUtils = default;
+    private readonly EcsCustomInject<TrainUtilsSystem> trainUtils = default;
+
+
+    public NodeSearchResult FindBestNode<T>(int fromEntity) where T : struct
+    {
+      var currentNode = trainUtils.Value.GetCurrentNode(fromEntity);
+      using var results = new NativeList<NodeSearchResult>(16, Allocator.Temp);
+      using var nodes = railroadUtils.Value.GetAllNodes(Allocator.Temp);
+      
+      foreach (var targetNode in nodes)
+      {
+        if (!entityRepository.Value.HasComponent<T>(targetNode))
+          continue;
+
+        var path = FindPath(currentNode, targetNode);
+        if (path.Length == 0)
+          continue;
+
+        float scoreBase = GetNodeScore<T>(targetNode);
+        float pathDistance = CalculatePathDistance(path);
+        float score = pathDistance <= float.Epsilon ? scoreBase : scoreBase / pathDistance;
+
+        results.Add(new NodeSearchResult 
+        { 
+          node = targetNode,
+          score = score,
+          pathDistance = pathDistance,
+          path = path
+        });
+      }
+
+      if(results.Length == 0)
+        return NodeSearchResult.Empty;
+
+      results.Sort(new NodeSearchResultComparer());
+      var best = results[0];
+      return best;
+    }
+
+    private float GetNodeScore<T>(int node) where T : struct
+    {
+      if (typeof(T) == typeof(MineComponent))
+        return mineUtils.Value.GetMiningMultiplier(node);
+      if (typeof(T) == typeof(BaseComponent))
+        return baseUtils.Value.GetResourceMultiplier(node);
+      return 0f;
+    }
+
+    private float CalculatePathDistance(NativeArray<int> path)
+    {
+      float length = 0f;
+      for (int i = 0; i < path.Length - 1; i++)
+      {
+        var fromPos = transformUtils.Value.GetPosition(path[i]);
+        var toPos = transformUtils.Value.GetPosition(path[i + 1]);
+        length += math.length(toPos - fromPos);
+      }
+      return length;
+    }
 
     public NativeArray<int> FindPath(int startNode, int endNode)
     {
@@ -48,7 +118,6 @@ namespace WE.Core.Navigation.System
         }
       }
 
-      // Путь не найден, возвращаем пустой массив
       return new NativeArray<int>(0, Allocator.Persistent);
     }
 
@@ -61,12 +130,11 @@ namespace WE.Core.Navigation.System
       using var nodes = railroadUtils.Value.GetAllNodes(Allocator.Temp);
       foreach (var node in nodes)
       {
-        // Проверяем, что нода имеет нужный компонент
         if (!entityRepository.Value.HasComponent<T>(node))
           continue;
 
         var nodePos = transformUtils.Value.GetPosition(node);
-        var distance = math.lengthsq(nodePos - entityPos); // Используем lengthsq для оптимизации
+        var distance = math.lengthsq(nodePos - entityPos);
 
         if (distance < minDistance)
         {
@@ -97,12 +165,10 @@ namespace WE.Core.Navigation.System
       }
       path.Add(startNode);
 
-      // Создаем результирующий массив и копируем в него путь в обратном порядке
       var result = new NativeArray<int>(path.Length, Allocator.Persistent);
       for (int i = 0; i < path.Length; i++)
-      {
         result[i] = path[path.Length - 1 - i];
-      }
+
       return result;
     }
 
