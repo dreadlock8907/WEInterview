@@ -73,5 +73,12 @@ namespace WE.Core.Cargo.System
         return 0f;
       return cargoPool.Value.Get(entity).loadingSpeed;
     }
+
+    public int GetMaxResource(int entity)
+    {
+      if (!IsCargo(entity))
+        return 0;
+      return cargoPool.Value.Get(entity).maxResource;
+    }
   }
 }

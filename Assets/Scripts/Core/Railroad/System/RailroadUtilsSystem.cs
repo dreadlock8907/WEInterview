@@ -10,6 +10,7 @@ using WE.Core.Transform.System;
 using WE.Core.Util;
 using Unity.Collections;
 using WE.Core.Util.Components;
+using WE.Core.Extensions;
 
 namespace WE.Core.Railroad.System
 {
@@ -26,7 +27,7 @@ namespace WE.Core.Railroad.System
     {
       var nodeEntity = entityRepository.Value.CreateNewEntity();
       transformUtilsSystem.Value.UpdatePosition(nodeEntity, position);
-      ref var nodeComponent = ref nodePool.Value.Add(nodeEntity);
+      nodePool.Value.GetOrCreate(nodeEntity);
 
       return nodeEntity;
     }

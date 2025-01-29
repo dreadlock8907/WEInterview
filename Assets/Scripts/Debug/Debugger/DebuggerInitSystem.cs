@@ -9,6 +9,9 @@ using WE.Core.Mine.System;
 using WE.Core.Base.System;
 
 using WE.Debug.Railroad;
+using WE.Core.Train.System;
+using WE.Debug.Train;
+using WE.Core.Cargo.System;
 
 namespace WE.Debug.Debugger
 {
@@ -19,7 +22,8 @@ namespace WE.Debug.Debugger
     private readonly EcsCustomInject<TransformUtilsSystem> transformUtils = default;
     private readonly EcsCustomInject<MineUtilsSystem> mineUtils = default;
     private readonly EcsCustomInject<BaseUtilsSystem> baseUtils = default;
-
+    private readonly EcsCustomInject<TrainUtilsSystem> trainUtils = default;
+    private readonly EcsCustomInject<CargoUtilsSystem> cargoUtils = default;
     public DebuggerInitSystem()
     {
     }
@@ -38,8 +42,8 @@ namespace WE.Debug.Debugger
 
     public void Init(IEcsSystems systems)
     {
-      CreateDebugVisualizingDebuggable(new RailroadDebugger(railroadUtils.Value, transformUtils.Value, 
-                                                          mineUtils.Value, baseUtils.Value));
+      CreateDebugVisualizingDebuggable(new RailroadDebugger(railroadUtils.Value, transformUtils.Value, mineUtils.Value, baseUtils.Value));
+      CreateDebugVisualizingDebuggable(new TrainDebugger(trainUtils.Value, railroadUtils.Value, transformUtils.Value, cargoUtils.Value));
       // Add new debuggers down here..
     }
   }

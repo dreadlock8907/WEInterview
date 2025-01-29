@@ -9,14 +9,16 @@ using WE.Core.Train.State;
 using WE.Core.Transform.Component;
 using WE.Core.Transform.System;
 using WE.Core.Util;
+using WE.Core.Util.Components;
 
 namespace WE.Core.Train.System
 {
   public class TrainUtilsSystem : IEcsSystem
   {
     private readonly EcsPoolInject<TrainComponent> trainPool = default;
-    private readonly EcsPoolInject<TrainBindComponent> trainBindPool = default;
     private readonly EcsPoolInject<TrainStateComponent> trainStatePool = default;
+    private readonly EcsFilterInject<Inc<TrainComponent>, Exc<DestroyComponent>> trainFilter = default;
+    private readonly EcsPoolInject<TrainBindComponent> trainBindPool = default;
     private readonly EcsPoolInject<TrainMovementComponent> movementPool = default;
     private readonly EcsPoolInject<PositionComponent> positionPool = default;
     private readonly EcsCustomInject<DestroySystem> destroySystem = default;
@@ -30,8 +32,6 @@ namespace WE.Core.Train.System
 
       ref var train = ref trainPool.Value.Add(entity);
       train.maxSpeed = moveSpeed;
-      train.loadingSpeed = loadingSpeed;
-      train.maxResource = maxResource;
 
       ref var trainState = ref trainStatePool.Value.Add(entity);
       trainState.state = TrainState.Idle;
@@ -40,9 +40,17 @@ namespace WE.Core.Train.System
       trainBind.currentNode = startNode;
 
       transformUtils.Value.UpdatePosition(entity, transformUtils.Value.GetPosition(startNode));
-      cargoUtils.Value.Setup(entity, maxResource, train.loadingSpeed);
+      cargoUtils.Value.Setup(entity, maxResource, loadingSpeed);
 
-      return entity;
+      SetState(entity, TrainState.Idle);
+
+      return entity;  
+    }
+
+    public void SetState(int trainEntity, TrainState state)
+    {
+      ref var trainState = ref trainStatePool.Value.GetOrCreate(trainEntity);
+      trainState.state = state;
     }
 
     public void Move(int trainEntity, NativeArray<int> route)
@@ -72,6 +80,18 @@ namespace WE.Core.Train.System
       }
     }
 
+    public NativeArray<int> GetAllTrains(Allocator allocator)
+    {
+      var count = trainFilter.Value.GetEntitiesCount();
+      var result = new NativeArray<int>(count, allocator);
+      
+      var idx = 0;
+      foreach (var entity in trainFilter.Value)
+        result[idx++] = entity;
+      
+      return result;
+    }
+
     public bool IsTrain(int entity)
     {
       return !destroySystem.Value.IsOnDestroy(entity) && trainPool.Value.Has(entity);
@@ -94,6 +114,33 @@ namespace WE.Core.Train.System
       if (!IsTrain(entity))
         return -1;
       return trainBindPool.Value.Get(entity).currentNode;
+    }
+
+    public void DestroyTrain(int entity)
+    {
+      if (!IsTrain(entity))
+        return;
+        
+      if (IsMoving(entity))
+        Stop(entity);
+        
+      destroySystem.Value.DestroyEntity(entity);
+    }
+
+    public ref TrainComponent GetTrainComponent(int entity)
+    {
+      return ref trainPool.Value.Get(entity);
+    }
+
+    public void UpdateTrainParameters(int entity, int maxResource, float moveSpeed, float loadingSpeed)
+    {
+      if (!IsTrain(entity))
+        return;
+        
+      ref var train = ref trainPool.Value.Get(entity);
+      train.maxSpeed = moveSpeed;
+      
+      cargoUtils.Value.Setup(entity, maxResource, loadingSpeed);
     }
   }
 }

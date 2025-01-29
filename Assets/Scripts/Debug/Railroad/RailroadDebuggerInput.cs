@@ -5,17 +5,17 @@ using Unity.Mathematics;
 
 namespace WE.Debug.Railroad
 {
-    public static class RailroadDebuggerInput
+  public static class RailroadDebuggerInput
+  {
+    public class Create
     {
-        public class Create
-        {
-            public float3 Position = float3.zero;
-        }
-
-        public class Edit
-        {
-            public int SelectedNodeEntity = -1;
-            public int LinkTargetEntity = -1;
-        }
+      public float3 Position = float3.zero;
     }
-} 
+
+    public class Edit
+    {
+      public int SelectedNodeEntity = -1;
+      public int LinkTargetEntity = -1;
+    }
+  }
+}

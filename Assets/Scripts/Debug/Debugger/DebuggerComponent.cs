@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace WE.Debug.Debugger
 {
+  [ExecuteAlways]
   public class DebuggerComponent : MonoBehaviour
   {
     private IDebugger debugger;
@@ -27,6 +28,9 @@ namespace WE.Debug.Debugger
 
     private void OnSceneView(SceneView sceneView)
     {
+      if (Event.current.type != EventType.Repaint)
+        return;
+
       debugger.DebugOnScene(sceneView);
       SceneView.RepaintAll();
     }

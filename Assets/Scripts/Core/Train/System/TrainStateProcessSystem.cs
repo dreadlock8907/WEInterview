@@ -10,6 +10,7 @@ using WE.Core.Navigation.System;
 using WE.Core.Base.Component;
 using WE.Core.Mine.Component;
 using WE.Core.Train.State;
+using WE.Core.Extensions;
 
 namespace WE.Core.Train.System
 {
