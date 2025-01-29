@@ -10,6 +10,7 @@ using WE.Core.Transform.Component;
 using WE.Core.Transform.System;
 using WE.Core.Util;
 using WE.Core.Util.Components;
+using UnityEngine;
 
 namespace WE.Core.Train.System
 {
@@ -58,11 +59,21 @@ namespace WE.Core.Train.System
       if (!IsTrain(trainEntity))
         return;
 
+      if (route.Length < 2)
+      {
+        Debug.LogError($"Cannot move train {trainEntity}: route must contain at least 2 nodes");
+        return;
+      }
+
       if (IsMoving(trainEntity))
         Stop(trainEntity);
 
       ref var movement = ref movementPool.Value.GetOrCreate(trainEntity);
-      movement.route.CopyFrom(route);
+      
+      if (movement.route.IsCreated)
+        movement.route.Dispose();
+      
+      movement.route = new NativeArray<int>(route, Allocator.Persistent);
       movement.routeIndex = 0;
       movement.currentNode = route[0];
       movement.nextNode = route[1];
@@ -130,6 +141,13 @@ namespace WE.Core.Train.System
     public ref TrainComponent GetTrainComponent(int entity)
     {
       return ref trainPool.Value.Get(entity);
+    }
+
+    public TrainState GetTrainState(int entity)
+    {
+      if (!trainStatePool.Value.Has(entity))
+        return TrainState.Idle;
+      return trainStatePool.Value.Get(entity).state;
     }
 
     public void UpdateTrainParameters(int entity, int maxResource, float moveSpeed, float loadingSpeed)

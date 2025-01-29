@@ -189,7 +189,8 @@ namespace WE.Debug.Train
         style.normal.textColor = TrainDebuggerStyle.Train.DefaultColor;
         style.fontSize = TrainDebuggerStyle.Train.LabelSize;
         style.alignment = TrainDebuggerStyle.Train.LabelAlignment;
-        Handles.Label(labelPos, $"Train {train}", style);
+        var state = trainUtils.GetTrainState(train);
+        Handles.Label(labelPos, $"Train {train}\n{state}", style);
       }
     }
 
