@@ -1,7 +1,8 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
-
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine.Assertions;
 using WE.Core.Util.Components;
 
@@ -12,6 +13,21 @@ namespace WE.Core.Util
     private readonly HashSet<int> aliveEntities = new(1024);
 
     private readonly EcsCustomInject<IEcsSystems> ecsSystems;
+
+    public bool HasComponent<T>(int entity) where T : struct
+    {
+      var world = ecsSystems.Value.GetWorld();
+      try
+      {
+        var entityPool = world.GetPool<T>();
+        return entityPool.Has(entity);
+      }
+      catch (Exception e)
+      {
+        UnityEngine.Debug.LogError(e);
+        return false;
+      }
+    }
 
     public void Run(IEcsSystems ecsSystems)
     {

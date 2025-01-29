@@ -48,7 +48,7 @@ namespace WE.Debug.Railroad
         nodeInfoBuilder.Append("Node ").Append(entity);
         if (mineUtils.IsMine(entity))
         {
-          var multiplier = mineUtils.GetLoadingMultiplier(entity);
+          var multiplier = mineUtils.GetMiningMultiplier(entity);
           nodeInfoBuilder.Append("\nMine (x").AppendFormat("{0:F1}", multiplier).Append(')');
         }
         if (baseUtils.IsBase(entity))
@@ -238,7 +238,7 @@ namespace WE.Debug.Railroad
           GUILayout.Space(5);
           EditorGUILayout.BeginHorizontal("box");
           GUILayout.Label("Loading Multiplier:", GUILayout.Width(110));
-          var currentMultiplier = mineUtils.GetLoadingMultiplier(editInput.SelectedNodeEntity);
+          var currentMultiplier = mineUtils.GetMiningMultiplier(editInput.SelectedNodeEntity);
           var newMultiplier = EditorGUILayout.FloatField(currentMultiplier);
           if (currentMultiplier != newMultiplier)
           {

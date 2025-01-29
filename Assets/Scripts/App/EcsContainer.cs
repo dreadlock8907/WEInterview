@@ -2,10 +2,14 @@ using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Leopotam.EcsLite.ExtendedSystems;
 using WE.Core.Base.System;
+using WE.Core.Cargo.System;
 using WE.Core.Mine.System;
+using WE.Core.Navigation.System;
 using WE.Core.Railroad.Component;
 using WE.Core.Railroad.System;
 using WE.Core.Time;
+using WE.Core.Train.Component;
+using WE.Core.Train.System;
 using WE.Core.Transform.Component;
 using WE.Core.Transform.System;
 using WE.Core.Util;
@@ -37,8 +41,11 @@ namespace WE.App
       var transformUtilsSystem = new TransformUtilsSystem();
       var entityRepositorySystem = new EntityRepositorySystem();
       var railroadUtilsSystem = new RailroadUtilsSystem();
+      var navigationUtilsSystem = new NavigationUtilsSystem();
       var baseUtilsSystem = new BaseUtilsSystem();
       var mineUtilsSystem = new MineUtilsSystem();
+      var cargoUtilsSystem = new CargoUtilsSystem();
+      var trainUtilsSystem = new TrainUtilsSystem();
       var destroySystem = new DestroySystem();
 
       systems
@@ -46,13 +53,20 @@ namespace WE.App
         .Add(transformUtilsSystem)
         .Add(entityRepositorySystem)
         .Add(railroadUtilsSystem)
+        .Add(navigationUtilsSystem)
         .Add(baseUtilsSystem)
         .Add(mineUtilsSystem)
+        .Add(new MineProcessSystem())
+        .Add(cargoUtilsSystem)
+        .Add(trainUtilsSystem)
+        .Add(new TrainMovementProcessSystem())
+
         // Time process system should be after all systems are updated
         .Add(new TimeProcessSystem())
 
-        // Dispose system down here
+        // Dispose systems down here
         .Add(new DisposeSystem<NodeComponent>())
+        .Add(new DisposeSystem<TrainMovementComponent>())
 
         // And after all, destroy entities with DestroyComponent
         .Add(destroySystem);
@@ -73,8 +87,11 @@ namespace WE.App
         transformUtilsSystem,
         entityRepositorySystem,
         railroadUtilsSystem,
+        navigationUtilsSystem,
         baseUtilsSystem,
         mineUtilsSystem,
+        cargoUtilsSystem,
+        trainUtilsSystem,
         destroySystem,
         systems);
 
