@@ -31,20 +31,18 @@ namespace WE.Core.Train.State
       if (context.TrainUtils.IsMoving(entity))
         return;
 
-      var bestTarget = FindBestTargetNode(entity);
+      var moveSpeed = context.TrainUtils.GetMaxSpeed(entity);
+      
+      var bestTarget = context.CargoUtils.IsFull(entity)
+        ? context.NavigationUtils.FindBestNode<BaseComponent>(entity, moveSpeed)
+        : context.NavigationUtils.FindBestNode<MineComponent>(entity, moveSpeed);
+      
       if (bestTarget.IsEmpty)
         return;
 
       state.state = TrainState.Moving;
       context.TrainUtils.Move(entity, bestTarget.path);
       bestTarget.Dispose();
-    }
-
-    private NodeSearchResult FindBestTargetNode(int entity)
-    {
-      return context.CargoUtils.IsFull(entity)
-        ? context.NavigationUtils.FindBestNode<BaseComponent>(entity)
-        : context.NavigationUtils.FindBestNode<MineComponent>(entity);
     }
   }
 

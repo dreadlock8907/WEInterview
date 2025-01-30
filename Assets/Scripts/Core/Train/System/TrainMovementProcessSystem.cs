@@ -55,8 +55,8 @@ namespace WE.Core.Train.System
       if (distance <= float.Epsilon)
         return;
 
-      var moveSpeed = trainUtilsSystem.Value.GetMoveSpeed(entity);
-      var normalizedSpeed = moveSpeed / distance;
+      var maxSpeed = trainUtilsSystem.Value.GetMaxSpeed(entity);
+      var normalizedSpeed = maxSpeed / distance;
       movement.progress += normalizedSpeed * timeService.Value.tickTime;
 
       if (movement.progress >= 1f)

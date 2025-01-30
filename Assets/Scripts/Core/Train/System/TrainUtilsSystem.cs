@@ -27,7 +27,7 @@ namespace WE.Core.Train.System
     private readonly EcsCustomInject<TransformUtilsSystem> transformUtils = default;
     private readonly EcsCustomInject<CargoUtilsSystem> cargoUtils = default;
 
-    public int CreateTrain(int startNode, int maxResource, float moveSpeed = 1f, float loadingSpeed = 1f)
+    public int CreateTrain(int startNode, int maxResource, float moveSpeed = 1f, float loadingTime = 1f)
     {
       var entity = entityRepository.Value.CreateNewEntity();
 
@@ -41,7 +41,7 @@ namespace WE.Core.Train.System
       trainBind.currentNode = startNode;
 
       transformUtils.Value.UpdatePosition(entity, transformUtils.Value.GetPosition(startNode));
-      cargoUtils.Value.Setup(entity, maxResource, loadingSpeed);
+      cargoUtils.Value.Setup(entity, maxResource, loadingTime);
 
       SetState(entity, TrainState.Idle);
 
@@ -108,7 +108,7 @@ namespace WE.Core.Train.System
       return !destroySystem.Value.IsOnDestroy(entity) && trainPool.Value.Has(entity);
     }
 
-    public float GetMoveSpeed(int entity)
+    public float GetMaxSpeed(int entity)
     {
       if (!IsTrain(entity))
         return 0f;
@@ -150,7 +150,7 @@ namespace WE.Core.Train.System
       return trainStatePool.Value.Get(entity).state;
     }
 
-    public void UpdateTrainParameters(int entity, int maxResource, float moveSpeed, float loadingSpeed)
+    public void UpdateTrainParameters(int entity, int maxResource, float moveSpeed, float loadingTime)
     {
       if (!IsTrain(entity))
         return;
@@ -158,7 +158,7 @@ namespace WE.Core.Train.System
       ref var train = ref trainPool.Value.Get(entity);
       train.maxSpeed = moveSpeed;
       
-      cargoUtils.Value.Setup(entity, maxResource, loadingSpeed);
+      cargoUtils.Value.Setup(entity, maxResource, loadingTime);
     }
 
     public NativeArray<int>.ReadOnly GetTrainRoute(int entity)

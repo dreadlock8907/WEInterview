@@ -27,7 +27,7 @@ namespace WE.Core.Navigation.System
     private readonly EcsCustomInject<TrainUtilsSystem> trainUtils = default;
 
 
-    public NodeSearchResult FindBestNode<T>(int fromEntity) where T : struct
+    public NodeSearchResult FindBestNode<T>(int fromEntity, float moveSpeed = 1f) where T : struct
     {
       var currentNode = trainUtils.Value.GetCurrentNode(fromEntity);
       using var results = new NativeList<NodeSearchResult>(16, Allocator.Temp);
@@ -44,7 +44,8 @@ namespace WE.Core.Navigation.System
 
         float scoreBase = GetNodeScore<T>(targetNode);
         float pathDistance = CalculatePathDistance(path);
-        float score = pathDistance <= float.Epsilon ? scoreBase : scoreBase / pathDistance;
+        float travelTime = pathDistance / moveSpeed;
+        float score = pathDistance <= float.Epsilon ? scoreBase : scoreBase / (1f + travelTime);
 
         results.Add(new NodeSearchResult 
         { 
