@@ -14,11 +14,11 @@ namespace WE.Core.Cargo.System
     private readonly EcsPoolInject<CargoComponent> cargoPool = default;
     private readonly EcsCustomInject<DestroySystem> destroySystem = default;
 
-    public void Setup(int entity, int maxResource, float loadingSpeed)
+    public void Setup(int entity, int maxResource, float loadingTime)
     {
       ref var cargo = ref cargoPool.Value.GetOrCreate(entity);
       cargo.maxResource = maxResource;
-      cargo.loadingSpeed = loadingSpeed;
+      cargo.loadingTime = loadingTime;
       cargo.resource = 0;
     }
 
@@ -67,11 +67,11 @@ namespace WE.Core.Cargo.System
       return !destroySystem.Value.IsOnDestroy(entity) && cargoPool.Value.Has(entity);
     }
 
-    public float GetLoadingSpeed(int entity)
+    public float GetLoadingTime(int entity)
     {
       if (!IsCargo(entity))
         return 0f;
-      return cargoPool.Value.Get(entity).loadingSpeed;
+      return cargoPool.Value.Get(entity).loadingTime;
     }
 
     public int GetMaxResource(int entity)

@@ -111,7 +111,7 @@ namespace WE.Debug.Train
     private void DrawTrainParameters()
     {
       createInput.MoveSpeed = EditorGUILayout.FloatField("Move Speed:", createInput.MoveSpeed);
-      createInput.LoadingSpeed = EditorGUILayout.FloatField("Loading Speed:", createInput.LoadingSpeed);
+      createInput.LoadingTime = EditorGUILayout.FloatField("Loading Speed:", createInput.LoadingTime);
       createInput.MaxResource = EditorGUILayout.IntField("Max Resource:", createInput.MaxResource);
     }
 
@@ -124,7 +124,7 @@ namespace WE.Debug.Train
           createInput.SelectedNode,
           createInput.MaxResource,
           createInput.MoveSpeed,
-          createInput.LoadingSpeed
+          createInput.LoadingTime
         );
       }
       GUI.enabled = true;
@@ -175,7 +175,7 @@ namespace WE.Debug.Train
     {
       var trainComponent = trainUtils.GetTrainComponent(train);
       editInput.MoveSpeed = trainComponent.maxSpeed;
-      editInput.LoadingSpeed = cargoUtils.GetLoadingSpeed(train);
+      editInput.LoadingTime = cargoUtils.GetLoadingTime(train);
       editInput.MaxResource = cargoUtils.GetMaxResource(train);
     }
 
@@ -194,7 +194,7 @@ namespace WE.Debug.Train
     private void DrawEditParameters()
     {
       editInput.MoveSpeed = EditorGUILayout.FloatField("Move Speed:", editInput.MoveSpeed);
-      editInput.LoadingSpeed = EditorGUILayout.FloatField("Loading Speed:", editInput.LoadingSpeed);
+      editInput.LoadingTime = EditorGUILayout.FloatField("Loading Time:", editInput.LoadingTime);
       editInput.MaxResource = EditorGUILayout.IntField("Max Resource:", editInput.MaxResource);
     }
 
@@ -206,7 +206,7 @@ namespace WE.Debug.Train
           editInput.SelectedTrain,
           editInput.MaxResource,
           editInput.MoveSpeed,
-          editInput.LoadingSpeed
+          editInput.LoadingTime
         );
       }
 

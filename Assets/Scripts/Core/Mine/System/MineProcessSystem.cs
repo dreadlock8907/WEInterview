@@ -31,7 +31,8 @@ namespace WE.Core.Mine.System
         }
 
         ref var mining = ref miningPool.Value.Get(entity);
-        mining.progress += mining.miningSpeed * timeService.Value.tickTime;
+        var progressPerTick = timeService.Value.tickTime / mining.miningTime;
+        mining.progress += progressPerTick;
         
         if (mining.progress >= 1f)
         {

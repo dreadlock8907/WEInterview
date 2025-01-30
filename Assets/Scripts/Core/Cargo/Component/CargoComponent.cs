@@ -4,6 +4,6 @@ namespace WE.Core.Cargo.Component
   {
     public int resource;
     public int maxResource;
-    public float loadingSpeed;
+    public float loadingTime;
   }
 }

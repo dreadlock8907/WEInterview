@@ -29,7 +29,7 @@ namespace WE.Core.Mine.System
 
       ref var mine = ref minePool.Value.Get(mineEntity);
       ref var mining = ref miningPool.Value.GetOrCreate(cargoEntity);
-      mining.miningSpeed = cargoUtils.Value.GetLoadingSpeed(cargoEntity) * mine.miningMulitiplier;
+      mining.miningTime = cargoUtils.Value.GetLoadingTime(cargoEntity) * mine.miningMulitiplier;
       mining.progress = 0f;
     }
 

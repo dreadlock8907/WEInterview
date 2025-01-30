@@ -61,7 +61,7 @@ namespace WE.Core.Train.System
 
       if (route.Length < 2)
       {
-        Debug.LogError($"Cannot move train {trainEntity}: route must contain at least 2 nodes");
+        Debug.LogWarning($"Cannot move train {trainEntity}: route must contain at least 2 nodes");
         return;
       }
 
