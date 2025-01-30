@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 namespace WE.Debug.Train
@@ -18,6 +19,13 @@ namespace WE.Debug.Train
       public static readonly Vector3 LabelOffset = Vector3.up * 0.5f; // tweaks by multiplier
       public static readonly int LabelSize = 12;
       public static readonly TextAnchor LabelAlignment = TextAnchor.MiddleCenter;
+
+      public static readonly GUIStyle LabelStyle = new GUIStyle(EditorStyles.label)
+      {
+        normal = { textColor = LabelColor },
+        fontSize = LabelSize,
+        alignment = LabelAlignment
+      };
     }
   }
 }

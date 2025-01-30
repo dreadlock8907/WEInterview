@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 namespace WE.Debug.Score
@@ -18,6 +19,14 @@ namespace WE.Debug.Score
       public static readonly int FontSize = 14;
       public static readonly TextAnchor Alignment = TextAnchor.MiddleCenter;
       public static readonly FontStyle Style = FontStyle.Bold;
+
+      public static readonly GUIStyle LabelStyle = new GUIStyle(EditorStyles.label)
+      {
+        normal = { textColor = Color },
+        fontSize = FontSize,
+        alignment = Alignment,
+        fontStyle = Style
+      };
     }
   }
 } 

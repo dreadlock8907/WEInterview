@@ -21,6 +21,7 @@ namespace WE.Debug.Train
     private readonly MineUtilsSystem mineUtils;
     private readonly TrainDebuggerInput.Create createInput;
     private readonly TrainDebuggerInput.Edit editInput;
+    private readonly System.Text.StringBuilder labelBuilder = new(100);
 
     public string Name => "Train";
 
@@ -245,15 +246,9 @@ namespace WE.Debug.Train
 
     private void DrawTrainLabel(int train)
     {
+      labelBuilder.Clear();
       var position = transformUtils.GetPosition(train);
       var labelPos = position.ToVector3() + TrainDebuggerStyle.Train.LabelOffset;
-      
-      var style = new GUIStyle
-      {
-        normal = { textColor = TrainDebuggerStyle.Train.LabelColor },
-        fontSize = TrainDebuggerStyle.Train.LabelSize,
-        alignment = TrainDebuggerStyle.Train.LabelAlignment
-      };
       
       var state = trainUtils.GetTrainState(train);
       var currentResource = cargoUtils.GetCurrentResource(train);
@@ -262,14 +257,13 @@ namespace WE.Debug.Train
       
       var totalProgress = (currentResource + miningProgress) / maxResource * 100f;
       
-      var labelBuilder = new System.Text.StringBuilder();
       labelBuilder.AppendLine($"Train {train}");
       labelBuilder.AppendLine($"{state}");
       labelBuilder.AppendLine($"{currentResource}/{maxResource}");
       if (state == Core.Train.State.TrainState.Loading)
         labelBuilder.AppendLine($"{totalProgress:F0}%");
 
-      Handles.Label(labelPos, labelBuilder.ToString(0, labelBuilder.Length), style);
+      Handles.Label(labelPos, labelBuilder.ToString(), TrainDebuggerStyle.Train.LabelStyle);
     }
 
     private void DrawTrainPath(int train)

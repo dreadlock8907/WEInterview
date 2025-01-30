@@ -35,18 +35,10 @@ namespace WE.Debug.Stats
         ScoreDebuggerStyle.Panel.Size.x, ScoreDebuggerStyle.Panel.Size.y);
       EditorGUI.DrawRect(rect, ScoreDebuggerStyle.Panel.BackgroundColor);
       
-      var style = new GUIStyle(EditorStyles.label)
-      {
-        normal = { textColor = ScoreDebuggerStyle.Text.Color },
-        fontSize = ScoreDebuggerStyle.Text.FontSize,
-        alignment = ScoreDebuggerStyle.Text.Alignment,
-        fontStyle = ScoreDebuggerStyle.Text.Style
-      };
-      
       var playerEntity = playerUtils.GetPlayerEntity();
       var totalScore = scoreVaultUtils.GetTotalScore(playerEntity);
       var content = new GUIContent($"Total Score:\n{totalScore}");
-      EditorGUI.LabelField(rect, content, style);
+      EditorGUI.LabelField(rect, content, ScoreDebuggerStyle.Text.LabelStyle);
       
       Handles.EndGUI();
     }
