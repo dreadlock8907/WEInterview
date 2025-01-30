@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using Unity.Collections;
+using System.Collections.Generic;
 
 using WE.Core.Railroad.System;
 using WE.Core.Transform.System;
@@ -21,6 +22,7 @@ namespace WE.Debug.Railroad
     private readonly RailroadDebuggerInput.Create createInput;
     private readonly RailroadDebuggerInput.Edit editInput;
     private readonly System.Text.StringBuilder nodeInfoBuilder = new();
+    private readonly RailroadDebuggerSerializer serializer;
 
     public string Name => "Railroad";
 
@@ -33,6 +35,7 @@ namespace WE.Debug.Railroad
       this.baseUtils = baseUtils;
       this.createInput = new RailroadDebuggerInput.Create();
       this.editInput = new RailroadDebuggerInput.Edit();
+      this.serializer = new RailroadDebuggerSerializer(railroadUtils, transformUtils, mineUtils, baseUtils);
     }
 
     public void DebugOnGizmos()
@@ -58,6 +61,7 @@ namespace WE.Debug.Railroad
     public void DebugOnGUI()
     {
       CreateNodeGUI();
+      SaveLoadGUI();
       NodesListGUI();
       EditNodeGUI();
     }
@@ -384,6 +388,33 @@ namespace WE.Debug.Railroad
     {
       editInput.SelectedNodeEntity = -1;
       editInput.LinkTargetEntity = -1;
+    }
+
+    private void SaveLoadGUI()
+    {
+      GUILayout.Space(10);
+      GUILayout.Label("Save/Load Network", EditorStyles.boldLabel);
+      
+      if (GUILayout.Button("Save to JSON"))
+      {
+        var path = EditorUtility.SaveFilePanel(
+          "Save Railroad Network",
+          Application.dataPath,
+          "railroad_network.json",
+          "json"
+        );
+        serializer.WriteTo(path);
+      }
+      
+      if (GUILayout.Button("Load from JSON"))
+      {
+        var path = EditorUtility.OpenFilePanel(
+          "Load Railroad Network",
+          Application.dataPath,
+          "json"
+        );
+        serializer.ReadFrom(path);
+      }
     }
   }
 }
