@@ -25,9 +25,9 @@ namespace WE.Core.Train.System
       foreach (var entity in trainMovementFilter.Value)
       {
         ref var movement = ref trainMovementPool.Value.Get(entity);
-        ProcessStopMovement(entity, ref movement);
         ProcessMovement(entity, ref movement);
         ProcessUpdatePosition(entity, ref movement);
+        ProcessStopMovement(entity, ref movement);
       }
     }
 
@@ -42,10 +42,9 @@ namespace WE.Core.Train.System
 
     private void ProcessStopMovement(int entity, ref TrainMovementComponent movement)
     {
-      if (movement.progress >= 1f || 
-          movement.routeIndex >= movement.route.Length - 1 || 
-          movement.currentNode == movement.nextNode)
+      if (movement.progress >= 1f && movement.currentNode == movement.nextNode)
       {
+        UnityEngine.Debug.Log($"Train {entity} reached the end of the route {movement.currentNode}. Path length: {movement.route.Length}");
         trainUtilsSystem.Value.Stop(entity);
       }
     }
@@ -65,13 +64,15 @@ namespace WE.Core.Train.System
 
       if (movement.progress >= 1f)
       {
-        movement.progress = 0f;
+        var newRouteIndex = math.min(movement.routeIndex + 1, movement.route.Length - 1);
+        var nextRouteIndex = math.min(newRouteIndex + 1, movement.route.Length - 1);
+        movement.routeIndex = newRouteIndex;
         movement.currentNode = movement.nextNode;
-        movement.routeIndex = math.min(movement.routeIndex + 1, movement.route.Length - 1);
-        movement.nextNode = movement.route[movement.routeIndex];
+        movement.nextNode = movement.route[nextRouteIndex];
+        movement.progress = movement.currentNode == movement.nextNode ? 1f : 0f;
 
         ref var trainBind = ref trainBindPool.Value.Get(entity);
-        trainBind.currentNode = movement.nextNode;
+        trainBind.currentNode = movement.currentNode;
       }
     }
 

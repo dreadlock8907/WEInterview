@@ -58,9 +58,10 @@ namespace WE.App
         .Add(mineUtilsSystem)
         .Add(new MineProcessSystem())
         .Add(cargoUtilsSystem)
-        .Add(trainUtilsSystem)
+
         .Add(new TrainMovementProcessSystem())
         .Add(new TrainStateProcessSystem())
+        .Add(trainUtilsSystem)
 
         // Time process system should be after all systems are updated
         .Add(new TimeProcessSystem())

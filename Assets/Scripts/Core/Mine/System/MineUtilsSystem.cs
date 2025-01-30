@@ -5,12 +5,14 @@ using WE.Core.Extensions;
 using WE.Core.Util;
 using Unity.Mathematics;
 using WE.Core.Cargo.System;
+using WE.Core.Util.Components;
 
 namespace WE.Core.Mine.System
 {
   public class MineUtilsSystem : IEcsSystem
   {
     private readonly EcsPoolInject<MineComponent> minePool = default;
+    private readonly EcsFilterInject<Inc<MineComponent>, Exc<DestroyComponent>> mineFilter = default;
     private readonly EcsPoolInject<MiningComponent> miningPool = default;
     private readonly EcsCustomInject<DestroySystem> destroySystem = default;
     private readonly EcsCustomInject<CargoUtilsSystem> cargoUtils = default;
@@ -67,6 +69,11 @@ namespace WE.Core.Mine.System
       if(!IsMine(entity))
         return 0;
       return math.abs(minePool.Value.Get(entity).miningMulitiplier);
+    }
+
+    public int GetMinesCount()
+    {
+      return mineFilter.Value.GetEntitiesCount();
     }
   }
 }

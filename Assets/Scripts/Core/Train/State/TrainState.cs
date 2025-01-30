@@ -2,6 +2,7 @@ using WE.Core.Base.Component;
 using WE.Core.Mine.Component;
 using WE.Core.Train.Component;
 using WE.Core.Navigation;
+using UnityEngine;
 
 namespace WE.Core.Train.State
 {
@@ -27,13 +28,16 @@ namespace WE.Core.Train.State
 
     public void Process(int entity, ref TrainStateComponent state)
     {
-      var bestTarget = FindBestTargetNode(entity);
-      if(bestTarget.IsEmpty)
+      if (context.TrainUtils.IsMoving(entity))
         return;
 
+      var bestTarget = FindBestTargetNode(entity);
+      if (bestTarget.IsEmpty)
+        return;
+
+      state.state = TrainState.Moving;
       context.TrainUtils.Move(entity, bestTarget.path);
       bestTarget.Dispose();
-      state.state = TrainState.Moving;
     }
 
     private NodeSearchResult FindBestTargetNode(int entity)
@@ -81,15 +85,11 @@ namespace WE.Core.Train.State
         return;
       }
 
-      if (!context.MineUtils.IsMining(entity))
-      {
-        var mineEntity = context.TrainUtils.GetCurrentNode(entity);
-        context.MineUtils.Mine(entity, mineEntity);
-      }
-      else
-      {
-        state.state = TrainState.Idle;
-      }
+      if (context.MineUtils.IsMining(entity))
+        return;
+
+      var mineEntity = context.TrainUtils.GetCurrentNode(entity);
+      context.MineUtils.Mine(entity, mineEntity);
     }
   }
 
