@@ -8,6 +8,7 @@ using WE.Core.Railroad.System;
 using WE.Core.Transform.System;
 using WE.Core.Extensions;
 using WE.Core.Cargo.System;
+using WE.Core.Mine.System;
 
 namespace WE.Debug.Train
 {
@@ -17,6 +18,7 @@ namespace WE.Debug.Train
     private readonly RailroadUtilsSystem railroadUtils;
     private readonly TransformUtilsSystem transformUtils;
     private readonly CargoUtilsSystem cargoUtils;
+    private readonly MineUtilsSystem mineUtils;
     private readonly TrainDebuggerInput.Create createInput;
     private readonly TrainDebuggerInput.Edit editInput;
 
@@ -26,12 +28,14 @@ namespace WE.Debug.Train
       TrainUtilsSystem trainUtils,
       RailroadUtilsSystem railroadUtils,
       TransformUtilsSystem transformUtils,
-      CargoUtilsSystem cargoUtils)
+      CargoUtilsSystem cargoUtils,
+      MineUtilsSystem mineUtils)
     {
       this.trainUtils = trainUtils;
       this.railroadUtils = railroadUtils;
       this.transformUtils = transformUtils;
       this.cargoUtils = cargoUtils;
+      this.mineUtils = mineUtils;
       this.createInput = new TrainDebuggerInput.Create();
       this.editInput = new TrainDebuggerInput.Edit();
     }
@@ -50,11 +54,18 @@ namespace WE.Debug.Train
       {
         DrawTrainGizmo(train);
         DrawTrainLabel(train);
+        if (train == editInput.SelectedTrain)
+          DrawTrainPath(train);
       }
     }
 
     public void DebugOnGizmos()
     {
+    }
+
+    public void OnDeselect()
+    {
+      editInput.SelectedTrain = -1;
     }
 
     private void DrawCreateTrainGUI()
@@ -227,13 +238,45 @@ namespace WE.Debug.Train
       
       var style = new GUIStyle
       {
-        normal = { textColor = TrainDebuggerStyle.Train.DefaultColor },
+        normal = { textColor = TrainDebuggerStyle.Train.LabelColor },
         fontSize = TrainDebuggerStyle.Train.LabelSize,
         alignment = TrainDebuggerStyle.Train.LabelAlignment
       };
       
       var state = trainUtils.GetTrainState(train);
-      Handles.Label(labelPos, $"Train {train}\n{state}", style);
+      var currentResource = cargoUtils.GetCurrentResource(train);
+      var maxResource = cargoUtils.GetMaxResource(train);
+      var miningProgress = mineUtils.GetMiningProgress(train);
+      
+      var totalProgress = (currentResource + miningProgress) / maxResource * 100f;
+      
+      var labelBuilder = new System.Text.StringBuilder();
+      labelBuilder.AppendLine($"Train {train}");
+      labelBuilder.AppendLine($"{state}");
+      labelBuilder.AppendLine($"{currentResource}/{maxResource}");
+      if (state == Core.Train.State.TrainState.Loading)
+        labelBuilder.AppendLine($"{totalProgress:F0}%");
+
+      Handles.Label(labelPos, labelBuilder.ToString(0, labelBuilder.Length), style);
+    }
+
+    private void DrawTrainPath(int train)
+    {
+      if (!trainUtils.IsMoving(train)) 
+        return;
+        
+      var route = trainUtils.GetTrainRoute(train);
+      if (route.Length < 2) 
+        return;
+        
+      Handles.color = TrainDebuggerStyle.Train.SelectedColor;
+      
+      for (int i = 0; i < route.Length - 1; i++)
+      {
+        var startPos = transformUtils.GetPosition(route[i]).ToVector3();
+        var endPos = transformUtils.GetPosition(route[i + 1]).ToVector3();
+        Handles.DrawLine(startPos, endPos);
+      }
     }
   }
 }

@@ -379,5 +379,11 @@ namespace WE.Debug.Railroad
         editInput.SelectedNodeEntity = -1;
       }
     }
+
+    public void OnDeselect()
+    {
+      editInput.SelectedNodeEntity = -1;
+      editInput.LinkTargetEntity = -1;
+    }
   }
 }

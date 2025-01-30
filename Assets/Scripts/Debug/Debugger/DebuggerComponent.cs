@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,13 +17,14 @@ namespace WE.Debug.Debugger
     public void OnEnable()
     {
       SceneView.duringSceneGui += OnSceneView;
+      SceneView.windowFocusChanged += OnWindowFocusChanged;
       SceneView.RepaintAll();
     }
-
 
     public void OnDisable()
     {
       SceneView.duringSceneGui -= OnSceneView;
+      SceneView.windowFocusChanged -= OnWindowFocusChanged;
       SceneView.RepaintAll();
     }
 
@@ -33,6 +35,11 @@ namespace WE.Debug.Debugger
 
       debugger.DebugOnScene(sceneView);
       SceneView.RepaintAll();
+    }
+
+    private void OnWindowFocusChanged()
+    {
+      debugger?.OnDeselect();
     }
 
     public void OnInspectorGUI()

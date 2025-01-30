@@ -160,5 +160,14 @@ namespace WE.Core.Train.System
       
       cargoUtils.Value.Setup(entity, maxResource, loadingSpeed);
     }
+
+    public NativeArray<int>.ReadOnly GetTrainRoute(int entity)
+    {
+      if (!IsMoving(entity))
+        return new NativeArray<int>(0, Allocator.Temp).AsReadOnly();
+        
+      ref var movement = ref movementPool.Value.Get(entity);
+      return movement.route.AsReadOnly();
+    }
   }
 }

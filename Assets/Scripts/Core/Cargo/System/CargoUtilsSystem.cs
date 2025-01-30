@@ -80,5 +80,21 @@ namespace WE.Core.Cargo.System
         return 0;
       return cargoPool.Value.Get(entity).maxResource;
     }
+
+    public float GetLoadingProgress(int entity)
+    {
+      if (!IsCargo(entity))
+        return 0f;
+
+      var cargoComponent = cargoPool.Value.Get(entity);
+      return cargoComponent.resource / cargoComponent.maxResource;
+    }
+
+    public int GetCurrentResource(int entity)
+    {
+      if (!IsCargo(entity))
+        return 0;
+      return cargoPool.Value.Get(entity).resource;
+    }
   }
 }

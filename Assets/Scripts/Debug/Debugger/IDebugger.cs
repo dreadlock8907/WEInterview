@@ -8,5 +8,6 @@ namespace WE.Debug.Debugger
     void DebugOnScene(SceneView sceneView);
     void DebugOnGUI();
     void DebugOnGizmos();
+    void OnDeselect();
   }
 }

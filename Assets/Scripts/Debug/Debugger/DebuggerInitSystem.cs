@@ -43,7 +43,7 @@ namespace WE.Debug.Debugger
     public void Init(IEcsSystems systems)
     {
       CreateDebugVisualizingDebuggable(new RailroadDebugger(railroadUtils.Value, transformUtils.Value, mineUtils.Value, baseUtils.Value));
-      CreateDebugVisualizingDebuggable(new TrainDebugger(trainUtils.Value, railroadUtils.Value, transformUtils.Value, cargoUtils.Value));
+      CreateDebugVisualizingDebuggable(new TrainDebugger(trainUtils.Value, railroadUtils.Value, transformUtils.Value, cargoUtils.Value, mineUtils.Value));
       // Add new debuggers down here..
     }
   }
