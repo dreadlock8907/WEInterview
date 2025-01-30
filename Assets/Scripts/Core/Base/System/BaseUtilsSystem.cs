@@ -7,6 +7,8 @@ using WE.Core.Base.Component;
 using WE.Core.Cargo.System;
 using WE.Core.Extensions;
 using WE.Core.Util;
+using WE.Core.Player.System;
+using WE.Core.Score.System;
 
 namespace WE.Core.Base.System
 {
@@ -15,6 +17,8 @@ namespace WE.Core.Base.System
     private readonly EcsPoolInject<BaseComponent> basePool = default;
     private readonly EcsCustomInject<DestroySystem> destroySystem = default;
     private readonly EcsCustomInject<CargoUtilsSystem> cargoUtils = default;
+    private readonly EcsCustomInject<PlayerUtilsSystem> playerUtils = default;
+    private readonly EcsCustomInject<ScoreVaultUtilsSystem> scoreVaultUtils = default;
 
     public void Setup(int entity, float resourceMultiplier)
     {
@@ -40,18 +44,19 @@ namespace WE.Core.Base.System
       return math.abs(basePool.Value.Get(entity).resourceMultiplier);
     }
 
-    public void Unload(int entity, int baseEntity)
+    public void Unload(int cargoEntity, int baseEntity)
     {
       if (!IsBase(baseEntity))
         return;
-    
-      var currentResource = cargoUtils.Value.GetResource(entity);
-      cargoUtils.Value.Unload(entity, currentResource);
+
+      var resources = cargoUtils.Value.GetCurrentResource(cargoEntity);
+      cargoUtils.Value.Unload(cargoEntity, resources);
 
       ref var baseComponent = ref basePool.Value.Get(baseEntity);
-      var score = currentResource * baseComponent.resourceMultiplier;
+      var score = resources * baseComponent.resourceMultiplier;
 
-      UnityEngine.Debug.Log($"Unload {currentResource} from {entity} to {baseEntity} with score {score}. TODO: Add score to player");
+      var playerEntity = playerUtils.Value.GetPlayerEntity();
+      scoreVaultUtils.Value.AddScore(playerEntity, score);
     }
   }
 }

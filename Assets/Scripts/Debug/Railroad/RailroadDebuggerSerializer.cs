@@ -6,6 +6,7 @@ using WE.Core.Mine.System;
 using WE.Core.Base.System;
 using WE.Core.Extensions;
 using Unity.Collections;
+using WE.Core.Train.System;
 
 namespace WE.Debug.Railroad
 {
@@ -15,7 +16,7 @@ namespace WE.Debug.Railroad
     private readonly TransformUtilsSystem transformUtils;
     private readonly MineUtilsSystem mineUtils;
     private readonly BaseUtilsSystem baseUtils;
-
+    private readonly TrainUtilsSystem trainUtils;
     public RailroadDebuggerSerializer(
       RailroadUtilsSystem railroadUtils,
       TransformUtilsSystem transformUtils,

@@ -15,8 +15,8 @@ namespace WE.Debug.Railroad
       public static readonly Color SelectedColor = Color.green;
       public static readonly Color MineColor = new Color(0.8f, 0.4f, 0.0f);
       public static readonly Color BaseColor = new Color(0.0f, 0.6f, 1.0f);
-      public const float Size = 0.5f;
-      public const float SelectedSize = 0.7f;
+      public const float Size = 1f;
+      public const float SelectedSize = 1.2f;
     }
 
     public static class Connection

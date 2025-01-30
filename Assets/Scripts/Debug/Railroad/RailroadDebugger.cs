@@ -9,6 +9,7 @@ using WE.Debug.Debugger;
 using WE.Core.Extensions;
 using WE.Core.Mine.System;
 using WE.Core.Base.System;
+using WE.Core.Train.System;
 
 namespace WE.Debug.Railroad
 {
@@ -23,7 +24,6 @@ namespace WE.Debug.Railroad
     private readonly RailroadDebuggerInput.Edit editInput;
     private readonly System.Text.StringBuilder nodeInfoBuilder = new();
     private readonly RailroadDebuggerSerializer serializer;
-
     public string Name => "Railroad";
 
     public RailroadDebugger(RailroadUtilsSystem railroadUtils, TransformUtilsSystem transformUtils,

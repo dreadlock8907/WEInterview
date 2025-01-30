@@ -14,6 +14,8 @@ using WE.Core.Transform.Component;
 using WE.Core.Transform.System;
 using WE.Core.Util;
 using WE.Core.Util.Components;
+using WE.Core.Player.System;
+using WE.Core.Score.System;
 
 #if UNITY_EDITOR
 using WE.Debug.Debugger;
@@ -37,7 +39,6 @@ namespace WE.App
       world = new EcsWorld();
       systems = new EcsSystems(world);
 
-      var timeInitSystem = new TimeInitSystem();
       var transformUtilsSystem = new TransformUtilsSystem();
       var entityRepositorySystem = new EntityRepositorySystem();
       var railroadUtilsSystem = new RailroadUtilsSystem();
@@ -47,9 +48,11 @@ namespace WE.App
       var cargoUtilsSystem = new CargoUtilsSystem();
       var trainUtilsSystem = new TrainUtilsSystem();
       var destroySystem = new DestroySystem();
+      var playerUtilsSystem = new PlayerUtilsSystem();
+      var scoreVaultUtilsSystem = new ScoreVaultUtilsSystem();
 
       systems
-        .Add(timeInitSystem)
+        .Add(new TimeInitSystem())
         .Add(transformUtilsSystem)
         .Add(entityRepositorySystem)
         .Add(railroadUtilsSystem)
@@ -58,6 +61,10 @@ namespace WE.App
         .Add(mineUtilsSystem)
         .Add(new MineProcessSystem())
         .Add(cargoUtilsSystem)
+        .Add(scoreVaultUtilsSystem)
+        
+        .Add(new PlayerInitSystem())
+        .Add(playerUtilsSystem)
 
         .Add(new TrainMovementProcessSystem())
         .Add(new TrainStateProcessSystem())
@@ -94,6 +101,8 @@ namespace WE.App
         mineUtilsSystem,
         cargoUtilsSystem,
         trainUtilsSystem,
+        playerUtilsSystem,
+        scoreVaultUtilsSystem,
         destroySystem,
         systems);
 

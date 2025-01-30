@@ -85,7 +85,7 @@ namespace WE.Debug.Train
       
       var options = new string[nodes.Length + 1];
       var optionValues = new int[nodes.Length + 1];
-      options[0] = "Select node...";
+      options[0] = "Random";
       optionValues[0] = -1;
 
       for (int i = 0; i < nodes.Length; i++)
@@ -111,23 +111,35 @@ namespace WE.Debug.Train
     private void DrawTrainParameters()
     {
       createInput.MoveSpeed = EditorGUILayout.FloatField("Move Speed:", createInput.MoveSpeed);
-      createInput.LoadingTime = EditorGUILayout.FloatField("Loading Speed:", createInput.LoadingTime);
+      createInput.LoadingTime = EditorGUILayout.FloatField("Loading Time:", createInput.LoadingTime);
       createInput.MaxResource = EditorGUILayout.IntField("Max Resource:", createInput.MaxResource);
     }
 
     private void DrawCreateButton()
     {
-      GUI.enabled = createInput.SelectedNode >= 0;
       if (GUILayout.Button("Create Train"))
       {
-        trainUtils.CreateTrain(
-          createInput.SelectedNode,
-          createInput.MaxResource,
-          createInput.MoveSpeed,
-          createInput.LoadingTime
-        );
+        var node = createInput.SelectedNode;
+        if(node < 0)
+        {
+          using var nodes = railroadUtils.GetAllNodes(Allocator.Temp);
+          if (nodes.Length > 0)
+          {
+            var randomIndex = Random.Range(0, nodes.Length);
+            node = nodes[randomIndex];
+          }
+        }
+
+        if(node >= 0)
+        {
+          trainUtils.CreateTrain(
+            node,
+            createInput.MaxResource,
+            createInput.MoveSpeed,
+            createInput.LoadingTime
+          );
+        }
       }
-      GUI.enabled = true;
     }
 
     private void DrawTrainsListGUI()

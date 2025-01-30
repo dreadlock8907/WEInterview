@@ -3,6 +3,7 @@ using Leopotam.EcsLite.Di;
 using Unity.Mathematics;
 using WE.Core.Extensions;
 using WE.Core.Transform.Component;
+using WE.Core.Util;
 
 namespace WE.Core.Transform.System
 {

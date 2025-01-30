@@ -12,6 +12,9 @@ using WE.Debug.Railroad;
 using WE.Core.Train.System;
 using WE.Debug.Train;
 using WE.Core.Cargo.System;
+using WE.Debug.Stats;
+using WE.Core.Score.System;
+using WE.Core.Player.System;
 
 namespace WE.Debug.Debugger
 {
@@ -24,6 +27,8 @@ namespace WE.Debug.Debugger
     private readonly EcsCustomInject<BaseUtilsSystem> baseUtils = default;
     private readonly EcsCustomInject<TrainUtilsSystem> trainUtils = default;
     private readonly EcsCustomInject<CargoUtilsSystem> cargoUtils = default;
+    private readonly EcsCustomInject<ScoreVaultUtilsSystem> scoreVaultUtils = default;
+    private readonly EcsCustomInject<PlayerUtilsSystem> playerUtils = default;
     public DebuggerInitSystem()
     {
     }
@@ -44,6 +49,7 @@ namespace WE.Debug.Debugger
     {
       CreateDebugVisualizingDebuggable(new RailroadDebugger(railroadUtils.Value, transformUtils.Value, mineUtils.Value, baseUtils.Value));
       CreateDebugVisualizingDebuggable(new TrainDebugger(trainUtils.Value, railroadUtils.Value, transformUtils.Value, cargoUtils.Value, mineUtils.Value));
+      CreateDebugVisualizingDebuggable(new ScoreDebugger(scoreVaultUtils.Value, playerUtils.Value));
       // Add new debuggers down here..
     }
   }

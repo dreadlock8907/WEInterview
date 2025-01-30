@@ -1,12 +1,9 @@
 using WE.Core.Base.Component;
 using WE.Core.Mine.Component;
 using WE.Core.Train.Component;
-using WE.Core.Navigation;
-using UnityEngine;
 
 namespace WE.Core.Train.State
 {
-
   public enum TrainState
   {
     Idle,

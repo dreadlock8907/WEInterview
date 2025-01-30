@@ -1,4 +1,3 @@
-using System;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Unity.Collections;
