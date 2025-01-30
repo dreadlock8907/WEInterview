@@ -43,10 +43,7 @@ namespace WE.Core.Train.System
     private void ProcessStopMovement(int entity, ref TrainMovementComponent movement)
     {
       if (movement.progress >= 1f && movement.currentNode == movement.nextNode)
-      {
-        UnityEngine.Debug.Log($"Train {entity} reached the end of the route {movement.currentNode}. Path length: {movement.route.Length}");
         trainUtilsSystem.Value.Stop(entity);
-      }
     }
 
     private void ProcessMovement(int entity, ref TrainMovementComponent movement)
