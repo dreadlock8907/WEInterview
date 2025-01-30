@@ -1,7 +1,7 @@
 using UnityEditor;
 using WE.Debug.Debugger;
 
-namespace Mart.Server.Ecs.Editor.Inspectors
+namespace WE.Editor.Debug
 {
   [CustomEditor(typeof(DebuggerComponent))]
   public sealed class DebuggerComponentInspector : UnityEditor.Editor
