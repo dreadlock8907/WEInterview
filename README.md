@@ -1,51 +1,91 @@
-# Railroad Network Editor
+# Railroad Network Simulation Core
 
-A Unity editor tool for creating and managing railroad networks using ECS (Entity Component System) architecture with LeoECS Lite.
+ECS-based railroad network simulation core system with editor tools for modeling resource transportation and logistics.
 
-## Features
+## Core Systems Architecture
 
-- Visual node-based railroad network editor
-- Scene view editing and visualization
-- Support for different node types:
-  - Regular nodes
-  - Mine nodes
-  - Base nodes
-- Node connections with distance display
+### Network & Transportation
+- **RailroadSystem**: Network topology and connections management
+- **NavigationSystem**: Pathfinding and route calculation
+- **TrainSystem**: Train movement and state management
+- **CargoSystem**: Resource loading/unloading logic
+
+### Resource Processing
+- **MineSystem**: Resource extraction simulation
+- **BaseSystem**: Resource processing and scoring
+- **ScoreSystem**: Resource delivery tracking
+
+### Technical Foundation
+- **TransformSystem**: Entity positioning and movement
+- **TimeSystem**: Simulation timing and updates
+- **EntityRepository**: Entity lifecycle management
+
+## Debug & Development Tools
+
+### Railroad Network Editor
+- Visual node creation and connection
+- Node type management (Regular/Mine/Base)
 - Real-time network visualization
-
-## Technical Details
-
-The project is built using:
-- Unity (2022.3+)
-- [LeoECS Lite](https://github.com/Leopotam/ecslite) - Light ECS framework
-- Custom editor tools and debug visualization
-
-### Core Systems
-
-- `RailroadUtilsSystem` - Manages railroad network topology
-- `MineUtilsSystem` - Handles mine node functionality
-- `BaseUtilsSystem` - Handles base node functionality
-- `TransformUtilsSystem` - Manages node positions and transformations
-
-### Debug Tools
-
-The editor includes a comprehensive debug interface:
-- Node creation and placement
-- Node type management
-- Connection creation and removal
-- Visual properties editing
+- Save/Load functionality
 - Distance measurements
-- Real-time network visualization
 
-## Usage
+### Train Management
+- Train creation and configuration
+- Route visualization
+- Cargo status monitoring
+- Real-time parameters adjustment
 
-1. Lauch Game scene
-2. Select Debugger_Railroad GameObject
-3. Use its DebuggerComponent
-4. Create nodes by specifying positions
-5. Select nodes to edit their properties
-6. Connect nodes to create railroad segments
-7. Set node types (Regular/Mine/Base) and adjust their parameters
-8. Use scene view for visual editing and inspection
+### Performance Features
+- ECS-based architecture (LeoECS Lite)
+- Native collections for memory efficiency
+- Cached UI elements
+- Proper resource disposal
 
-## Project Structure 
+## Technical Requirements
+- Unity 2022.3+
+- LeoECS Lite
+- Unity Mathematics package
+
+## Getting Started
+
+1. Open Game scene
+2. Launch Play Mode 
+2. Switch to Scene View window - all debug visualization happens there
+
+### Setting Up Railroad Network
+- Select Debugger_Railroad GameObject in Hierarchy
+- Use RailroadDebugger window to:
+  - Load existing network from railroad-network.json
+  - Create new nodes by specifying positions
+  - Connect nodes to create railroad segments
+  - Set node types (Regular/Mine/Base)
+  - Adjust node parameters
+  - Save network to file on demand
+
+### Managing Trains
+- Select Debugger_Train GameObject in Hierarchy
+- Use TrainDebugger window to:
+  - Create new trains
+  - Select starting node (or use random)
+  - Configure train parameters:
+    - Move speed
+    - Loading time
+    - Max resource capacity
+  - Monitor train states and cargo
+
+### Monitoring Score
+- Score panel is displayed in Scene View
+- Shows total resources delivered to bases
+
+## TODO & Potential Improvements
+
+### Navigation & Pathfinding
+- Consider node congestion in pathfinding
+- Add traffic analysis for route optimization
+- Implement dynamic path recalculation based on network load
+
+### Resource Management
+- Add node capacity limits
+
+### Performance Optimization
+- Job System integration for pathfinding
