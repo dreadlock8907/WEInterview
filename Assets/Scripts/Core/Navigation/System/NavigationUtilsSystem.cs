@@ -67,7 +67,11 @@ namespace WE.Core.Navigation.System
     private float GetNodeScore<T>(int node) where T : struct
     {
       if (typeof(T) == typeof(MineComponent))
-        return mineUtils.Value.GetMiningMultiplier(node);
+      {
+        // as lower mining multiplier is better
+        var miningMultiplier = mineUtils.Value.GetMiningMultiplier(node);
+        return miningMultiplier > 0 ? 1f / miningMultiplier : 0f;
+      }
       if (typeof(T) == typeof(BaseComponent))
         return baseUtils.Value.GetResourceMultiplier(node);
       return 0f;
