@@ -56,8 +56,8 @@ namespace WE.Core.Train.System
         return;
 
       var maxSpeed = trainUtilsSystem.Value.GetMaxSpeed(entity);
-      var normalizedSpeed = maxSpeed / distance;
-      movement.progress += normalizedSpeed * timeService.Value.tickTime;
+      var progressDelta = maxSpeed * timeService.Value.tickTime / distance;
+      movement.progress = math.clamp(movement.progress + progressDelta, 0f, 1f);
 
       if (movement.progress >= 1f)
       {
